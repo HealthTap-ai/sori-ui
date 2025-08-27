@@ -21,7 +21,7 @@
 	import Switch from '$lib/components/common/Switch.svelte';
 	import Spinner from '$lib/components/common/Spinner.svelte';
 
-	import ModelEditor from '$lib/components/workspace/Models/ModelEditor.svelte';
+
 	import { toast } from 'svelte-sonner';
 	import ConfirmDialog from '$lib/components/common/ConfirmDialog.svelte';
 	import Cog6 from '$lib/components/icons/Cog6.svelte';
@@ -517,19 +517,19 @@
 			</div>
 		{/if}
 	{:else}
-		<ModelEditor
-			edit
-			model={models.find((m) => m.id === selectedModelId)}
-			preset={false}
-			onSubmit={(model) => {
-				console.log(model);
-				upsertModelHandler(model);
-				selectedModelId = null;
-			}}
-			onBack={() => {
-				selectedModelId = null;
-			}}
-		/>
+		<div class="flex flex-col items-center justify-center w-full h-20">
+			<div class="text-gray-500 dark:text-gray-400 text-xs">
+				{$i18n.t('Model editing functionality has been removed')}
+			</div>
+			<button
+				class="mt-2 px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded-lg"
+				on:click={() => {
+					selectedModelId = null;
+				}}
+			>
+				{$i18n.t('Back')}
+			</button>
+		</div>
 	{/if}
 {:else}
 	<div class=" h-full w-full flex justify-center items-center">
