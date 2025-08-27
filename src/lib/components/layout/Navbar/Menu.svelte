@@ -17,7 +17,6 @@
 		showControls,
 		showArtifacts,
 		mobile,
-		temporaryChatEnabled,
 		theme
 	} from '$lib/stores';
 	import { flyAndScale } from '$lib/utils/transitions';
@@ -138,7 +137,7 @@
 		if (chat.id) {
 			let chatObj = null;
 
-			if (chat.id === 'local' || $temporaryChatEnabled) {
+			if (chat.id === 'local') {
 				chatObj = chat;
 			} else {
 				chatObj = await getChatById(localStorage.token, chat.id);
@@ -212,29 +211,27 @@
 				</DropdownMenu.Item>
 			{/if}
 
-			{#if !$temporaryChatEnabled}
-				<DropdownMenu.Item
-					class="flex gap-2 items-center px-3 py-2 text-sm  cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md"
-					id="chat-share-button"
-					on:click={() => {
-						shareHandler();
-					}}
+			<DropdownMenu.Item
+				class="flex gap-2 items-center px-3 py-2 text-sm  cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md"
+				id="chat-share-button"
+				on:click={() => {
+					shareHandler();
+				}}
+			>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+					fill="currentColor"
+					class="size-4"
 				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						viewBox="0 0 24 24"
-						fill="currentColor"
-						class="size-4"
-					>
-						<path
-							fill-rule="evenodd"
-							d="M15.75 4.5a3 3 0 1 1 .825 2.066l-8.421 4.679a3.002 3.002 0 0 1 0 1.51l8.421 4.679a3 3 0 1 1-.729 1.31l-8.421-4.678a3 3 0 1 1 0-4.132l8.421-4.679a3 3 0 0 1-.096-.755Z"
-							clip-rule="evenodd"
-						/>
-					</svg>
-					<div class="flex items-center">{$i18n.t('Share')}</div>
-				</DropdownMenu.Item>
-			{/if}
+					<path
+						fill-rule="evenodd"
+						d="M15.75 4.5a3 3 0 1 1 .825 2.066l-8.421 4.679a3.002 3.002 0 0 1 0 1.51l8.421 4.679a3 3 0 1 1-.729 1.31l-8.421-4.678a3 3 0 1 1 0-4.132l8.421-4.679a3 3 0 0 1-.096-.755Z"
+						clip-rule="evenodd"
+					/>
+				</svg>
+				<div class="flex items-center">{$i18n.t('Share')}</div>
+			</DropdownMenu.Item>
 
 			<DropdownMenu.Item
 				class="flex gap-2 items-center px-3 py-2 text-sm  cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md"
@@ -333,13 +330,11 @@
 				<div class="flex items-center">{$i18n.t('Copy')}</div>
 			</DropdownMenu.Item>
 
-			{#if !$temporaryChatEnabled}
-				<hr class="border-gray-100 dark:border-gray-850 my-0.5" />
+			<hr class="border-gray-100 dark:border-gray-850 my-0.5" />
 
-				<div class="flex p-1">
-					<Tags chatId={chat.id} />
-				</div>
-			{/if}
+			<div class="flex p-1">
+				<Tags chatId={chat.id} />
+			</div>
 		</DropdownMenu.Content>
 	</div>
 </Dropdown>

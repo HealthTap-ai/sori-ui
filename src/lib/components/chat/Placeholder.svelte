@@ -7,7 +7,7 @@
 
 	const dispatch = createEventDispatcher();
 
-	import { config, user, models as _models, temporaryChatEnabled } from '$lib/stores';
+	import { config, user, models as _models } from '$lib/stores';
 	import { sanitizeResponseContent, extractCurlyBraceWords } from '$lib/utils';
 	import { WEBUI_BASE_URL } from '$lib/constants';
 
@@ -89,17 +89,7 @@
 </script>
 
 <div class="m-auto w-full max-w-6xl px-2 @2xl:px-20 translate-y-6 py-24 text-center">
-	{#if $temporaryChatEnabled}
-		<Tooltip
-			content={$i18n.t('This chat won’t appear in history and your messages will not be saved.')}
-			className="w-full flex justify-center mb-0.5"
-			placement="top"
-		>
-			<div class="flex items-center gap-2 text-gray-500 font-medium text-lg my-2 w-fit">
-				<EyeSlash strokeWidth="2.5" className="size-5" />{$i18n.t('Temporary Chat')}
-			</div>
-		</Tooltip>
-	{/if}
+
 
 	<div
 		class="w-full text-3xl text-gray-800 dark:text-gray-100 text-center flex items-center gap-4 font-primary"
