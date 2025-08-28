@@ -24,6 +24,9 @@ ARG GID=0
 FROM --platform=$BUILDPLATFORM node:22-alpine3.20 AS build
 ARG BUILD_HASH
 
+# Set Node.js memory limit
+ENV NODE_OPTIONS=--max-old-space-size=4096
+
 WORKDIR /app
 
 COPY package.json package-lock.json ./
