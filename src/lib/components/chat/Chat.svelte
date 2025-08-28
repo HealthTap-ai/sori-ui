@@ -124,6 +124,7 @@
 
 	let chat = null;
 	let tags = [];
+	let sessionId = null;
 
 	let history = {
 		messages: {},
@@ -172,6 +173,9 @@
 				await goto('/');
 			}
 		})();
+	} else {
+		// New chat - generate session_id
+		sessionId = uuidv4();
 	}
 
 	$: if (selectedModels && chatIdProp !== '') {
@@ -784,6 +788,9 @@
 			tags = await getTagsById(localStorage.token, $chatId).catch(async (error) => {
 				return [];
 			});
+
+			// Set session_id from chat or generate new one if missing
+			sessionId = chat.session_id || uuidv4();
 
 			const chatContent = chat.chat;
 
@@ -1564,6 +1571,7 @@
 				stream: stream,
 				model: model.id,
 				messages: messages,
+				session_id: sessionId,
 				params: {
 					...$settings?.params,
 					...params,
@@ -1873,6 +1881,7 @@
 		});
 
 		_chatId = chat.id;
+		sessionId = chat.session_id; // Set session_id from newly created chat
 		await chatId.set(_chatId);
 
 		await chats.set(await getChatList(localStorage.token, $currentChatPage));
