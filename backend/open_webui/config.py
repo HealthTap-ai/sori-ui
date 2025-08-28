@@ -114,46 +114,63 @@ DEFAULT_CONFIG = {
         "prompt_suggestions": [
             {
                 "title": [
-                    "Help me study",
-                    "vocabulary for a college entrance exam",
+                    "Average payout per facility",
+                    f"for {datetime.now().strftime('%B %Y')}",
                 ],
-                "content": "Help me study vocabulary: write a sentence for me to fill in the blank, and I'll try to pick the correct option.",
+                "content": f"What is the average payout per facility for the month of {datetime.now().strftime('%B %Y')}?",
             },
             {
                 "title": [
-                    "Give me ideas",
-                    "for what to do with my kids' art",
+                    "Patients with low HIPPS scores",
+                    "in the past 30 days",
                 ],
-                "content": "What are 5 creative things I could do with my kids' art? I don't want to throw them away, but it's also so much clutter.",
+                "content": "Which patients had low HIPPS scores in the past 30 days?",
             },
             {
-                "title": ["Tell me a fun fact", "about the Roman Empire"],
-                "content": "Tell me a random fun fact about the Roman Empire",
+                "title": ["Patients with NF for NTA", "status check"],
+                "content": "Which patients have a NF for NTA?",
             },
             {
                 "title": [
-                    "Show me a code snippet",
-                    "of a website's sticky header",
+                    "BIMS and PHQ-9 follow-up",
+                    "patients needing assessment",
                 ],
-                "content": "Show me a code snippet of a website's sticky header in CSS and JavaScript.",
+                "content": "Which patients need BIMS and PHQ-9 follow-up?",
             },
             {
                 "title": [
-                    "Explain options trading",
-                    "if I'm familiar with buying and selling stocks",
+                    "SOB documentation missing",
+                    "while lying flat",
                 ],
-                "content": "Explain options trading in simple terms if I'm familiar with buying and selling stocks.",
-            },
-            {
-                "title": ["Overcome procrastination", "give me tips"],
-                "content": "Could you start by asking me about instances when I procrastinate the most and then give me some suggestions to overcome it?",
+                "content": "Which patients lack documentation for SOB while lying flat?",
             },
             {
                 "title": [
-                    "Grammar check",
-                    "rewrite it for better readability ",
+                    "MDS coordinator missed opportunities",
+                    "in 5 Day assessment",
                 ],
-                "content": 'Check the following sentence for grammar and clarity: "[sentence]". Rewrite it for better readability while maintaining its original meaning.',
+                "content": "Which opportunities did the MDS coordinator miss in the 5 Day assessment?",
+            },
+            {
+                "title": [
+                    "MAR_TAR requests needed",
+                    "from hospital",
+                ],
+                "content": "Which patients need the MAR_TAR requested from the hospital?",
+            },
+            {
+                "title": [
+                    "Swallow disorder without mech diet",
+                    "patient safety concern",
+                ],
+                "content": "Which patient has a swallow disorder but no mech diet?",
+            },
+            {
+                "title": [
+                    "Missing malnutrition documentation",
+                    "or risk assessment",
+                ],
+                "content": "Which patients don't have malnutrition/risk for malnutrition?",
             },
         ],
     },
@@ -957,31 +974,43 @@ DEFAULT_PROMPT_SUGGESTIONS = PersistentConfig(
     "ui.prompt_suggestions",
     [
         {
-            "title": ["Help me study", "vocabulary for a college entrance exam"],
-            "content": "Help me study vocabulary: write a sentence for me to fill in the blank, and I'll try to pick the correct option.",
-        },
-        {
-            "title": ["Give me ideas", "for what to do with my kids' art"],
-            "content": "What are 5 creative things I could do with my kids' art? I don't want to throw them away, but it's also so much clutter.",
-        },
-        {
-            "title": ["Tell me a fun fact", "about the Roman Empire"],
-            "content": "Tell me a random fun fact about the Roman Empire",
-        },
-        {
-            "title": ["Show me a code snippet", "of a website's sticky header"],
-            "content": "Show me a code snippet of a website's sticky header in CSS and JavaScript.",
-        },
-        {
             "title": [
-                "Explain options trading",
-                "if I'm familiar with buying and selling stocks",
+                "Average payout per facility",
+                f"for {datetime.now().strftime('%B %Y')}",
             ],
-            "content": "Explain options trading in simple terms if I'm familiar with buying and selling stocks.",
+            "content": f"What is the average payout per facility for the month of {datetime.now().strftime('%B %Y')}?",
         },
         {
-            "title": ["Overcome procrastination", "give me tips"],
-            "content": "Could you start by asking me about instances when I procrastinate the most and then give me some suggestions to overcome it?",
+            "title": ["Patients with low HIPPS scores", "in the past 30 days"],
+            "content": "Which patients had low HIPPS scores in the past 30 days?",
+        },
+        {
+            "title": ["Patients with NF for NTA", "status check"],
+            "content": "Which patients have a NF for NTA?",
+        },
+        {
+            "title": ["BIMS and PHQ-9 follow-up", "patients needing assessment"],
+            "content": "Which patients need BIMS and PHQ-9 follow-up?",
+        },
+        {
+            "title": ["SOB documentation missing", "while lying flat"],
+            "content": "Which patients lack documentation for SOB while lying flat?",
+        },
+        {
+            "title": ["MDS coordinator missed opportunities", "in 5 Day assessment"],
+            "content": "Which opportunities did the MDS coordinator miss in the 5 Day assessment?",
+        },
+        {
+            "title": ["MAR_TAR requests needed", "from hospital"],
+            "content": "Which patients need the MAR_TAR requested from the hospital?",
+        },
+        {
+            "title": ["Swallow disorder without mech diet", "patient safety concern"],
+            "content": "Which patient has a swallow disorder but no mech diet?",
+        },
+        {
+            "title": ["Missing malnutrition documentation", "or risk assessment"],
+            "content": "Which patients don't have malnutrition/risk for malnutrition?",
         },
     ],
 )
@@ -1078,15 +1107,6 @@ USER_PERMISSIONS_CHAT_MULTIPLE_MODELS = (
     os.environ.get("USER_PERMISSIONS_CHAT_MULTIPLE_MODELS", "True").lower() == "true"
 )
 
-USER_PERMISSIONS_CHAT_TEMPORARY = (
-    os.environ.get("USER_PERMISSIONS_CHAT_TEMPORARY", "True").lower() == "true"
-)
-
-USER_PERMISSIONS_CHAT_TEMPORARY_ENFORCED = (
-    os.environ.get("USER_PERMISSIONS_CHAT_TEMPORARY_ENFORCED", "False").lower()
-    == "true"
-)
-
 
 USER_PERMISSIONS_FEATURES_DIRECT_TOOL_SERVERS = (
     os.environ.get("USER_PERMISSIONS_FEATURES_DIRECT_TOOL_SERVERS", "False").lower()
@@ -1130,8 +1150,6 @@ DEFAULT_USER_PERMISSIONS = {
         "tts": USER_PERMISSIONS_CHAT_TTS,
         "call": USER_PERMISSIONS_CHAT_CALL,
         "multiple_models": USER_PERMISSIONS_CHAT_MULTIPLE_MODELS,
-        "temporary": USER_PERMISSIONS_CHAT_TEMPORARY,
-        "temporary_enforced": USER_PERMISSIONS_CHAT_TEMPORARY_ENFORCED,
     },
     "features": {
         "direct_tool_servers": USER_PERMISSIONS_FEATURES_DIRECT_TOOL_SERVERS,

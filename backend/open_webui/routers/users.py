@@ -92,8 +92,6 @@ class ChatPermissions(BaseModel):
     tts: bool = True
     call: bool = True
     multiple_models: bool = True
-    temporary: bool = True
-    temporary_enforced: bool = False
 
 
 class FeaturesPermissions(BaseModel):

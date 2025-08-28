@@ -599,6 +599,11 @@ async def generate_chat_completion(
 
     payload = {**form_data}
     metadata = payload.pop("metadata", None)
+    session_id = payload.pop("session_id", None)
+
+    # Log session_id for tracking
+    if session_id:
+        log.info(f"Processing chat completion for session: {session_id}")
 
     model_id = form_data.get("model")
     model_info = Models.get_model_by_id(model_id)

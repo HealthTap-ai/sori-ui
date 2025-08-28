@@ -38,6 +38,7 @@ class Chat(Base):
 
     meta = Column(JSON, server_default="{}")
     folder_id = Column(Text, nullable=True)
+    session_id = Column(String, nullable=True)
 
 
 class ChatModel(BaseModel):
@@ -57,6 +58,7 @@ class ChatModel(BaseModel):
 
     meta: dict = {}
     folder_id: Optional[str] = None
+    session_id: Optional[str] = None
 
 
 ####################
@@ -95,6 +97,7 @@ class ChatResponse(BaseModel):
     pinned: Optional[bool] = False
     meta: dict = {}
     folder_id: Optional[str] = None
+    session_id: Optional[str] = None
 
 
 class ChatTitleIdResponse(BaseModel):
@@ -108,6 +111,7 @@ class ChatTable:
     def insert_new_chat(self, user_id: str, form_data: ChatForm) -> Optional[ChatModel]:
         with get_db() as db:
             id = str(uuid.uuid4())
+            session_id = str(uuid.uuid4())
             chat = ChatModel(
                 **{
                     "id": id,
@@ -118,6 +122,7 @@ class ChatTable:
                         else "New Chat"
                     ),
                     "chat": form_data.chat,
+                    "session_id": session_id,
                     "created_at": int(time.time()),
                     "updated_at": int(time.time()),
                 }
@@ -134,6 +139,7 @@ class ChatTable:
     ) -> Optional[ChatModel]:
         with get_db() as db:
             id = str(uuid.uuid4())
+            session_id = str(uuid.uuid4())
             chat = ChatModel(
                 **{
                     "id": id,
@@ -147,6 +153,7 @@ class ChatTable:
                     "meta": form_data.meta,
                     "pinned": form_data.pinned,
                     "folder_id": form_data.folder_id,
+                    "session_id": session_id,
                     "created_at": int(time.time()),
                     "updated_at": int(time.time()),
                 }

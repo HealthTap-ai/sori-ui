@@ -30,7 +30,6 @@
 		showControls,
 		showCallOverlay,
 		currentChatPage,
-		temporaryChatEnabled,
 		mobile,
 		showOverview,
 		chatTitle,
@@ -125,6 +124,7 @@
 
 	let chat = null;
 	let tags = [];
+	let sessionId = null;
 
 	let history = {
 		messages: {},
@@ -173,6 +173,9 @@
 				await goto('/');
 			}
 		})();
+	} else {
+		// New chat - generate session_id
+		sessionId = uuidv4();
 	}
 
 	$: if (selectedModels && chatIdProp !== '') {
@@ -408,10 +411,6 @@
 					await initNewChat();
 				}
 			});
-		} else {
-			if ($temporaryChatEnabled) {
-				await goto('/');
-			}
 		}
 
 		if (localStorage.getItem(`chat-input-${chatIdProp}`)) {
@@ -790,6 +789,9 @@
 				return [];
 			});
 
+			// Set session_id from chat or generate new one if missing
+			sessionId = chat.session_id || uuidv4();
+
 			const chatContent = chat.chat;
 
 			if (chatContent) {
@@ -893,18 +895,16 @@
 		await tick();
 
 		if ($chatId == chatId) {
-			if (!$temporaryChatEnabled) {
-				chat = await updateChatById(localStorage.token, chatId, {
-					models: selectedModels,
-					messages: messages,
-					history: history,
-					params: params,
-					files: chatFiles
-				});
+			chat = await updateChatById(localStorage.token, chatId, {
+				models: selectedModels,
+				messages: messages,
+				history: history,
+				params: params,
+				files: chatFiles
+			});
 
-				currentChatPage.set(1);
-				await chats.set(await getChatList(localStorage.token, $currentChatPage));
-			}
+			currentChatPage.set(1);
+			await chats.set(await getChatList(localStorage.token, $currentChatPage));
 		}
 
 		taskIds = null;
@@ -948,18 +948,16 @@
 		}
 
 		if ($chatId == chatId) {
-			if (!$temporaryChatEnabled) {
-				chat = await updateChatById(localStorage.token, chatId, {
-					models: selectedModels,
-					messages: messages,
-					history: history,
-					params: params,
-					files: chatFiles
-				});
+			chat = await updateChatById(localStorage.token, chatId, {
+				models: selectedModels,
+				messages: messages,
+				history: history,
+				params: params,
+				files: chatFiles
+			});
 
-				currentChatPage.set(1);
-				await chats.set(await getChatList(localStorage.token, $currentChatPage));
-			}
+			currentChatPage.set(1);
+			await chats.set(await getChatList(localStorage.token, $currentChatPage));
 		}
 	};
 
@@ -1573,6 +1571,7 @@
 				stream: stream,
 				model: model.id,
 				messages: messages,
+				session_id: sessionId,
 				params: {
 					...$settings?.params,
 					...params,
@@ -1625,8 +1624,7 @@
 				chat_id: $chatId,
 				id: responseMessageId,
 
-				...(!$temporaryChatEnabled &&
-				(messages.length == 1 ||
+				...((messages.length == 1 ||
 					(messages.length == 2 &&
 						messages.at(0)?.role === 'system' &&
 						messages.at(1)?.role === 'user')) &&
@@ -1870,30 +1868,26 @@
 	const initChatHandler = async (history) => {
 		let _chatId = $chatId;
 
-		if (!$temporaryChatEnabled) {
-			chat = await createNewChat(localStorage.token, {
-				id: _chatId,
-				title: $i18n.t('New Chat'),
-				models: selectedModels,
-				system: $settings.system ?? undefined,
-				params: params,
-				history: history,
-				messages: createMessagesList(history, history.currentId),
-				tags: [],
-				timestamp: Date.now()
-			});
+		chat = await createNewChat(localStorage.token, {
+			id: _chatId,
+			title: $i18n.t('New Chat'),
+			models: selectedModels,
+			system: $settings.system ?? undefined,
+			params: params,
+			history: history,
+			messages: createMessagesList(history, history.currentId),
+			tags: [],
+			timestamp: Date.now()
+		});
 
-			_chatId = chat.id;
-			await chatId.set(_chatId);
+		_chatId = chat.id;
+		sessionId = chat.session_id; // Set session_id from newly created chat
+		await chatId.set(_chatId);
 
-			await chats.set(await getChatList(localStorage.token, $currentChatPage));
-			currentChatPage.set(1);
+		await chats.set(await getChatList(localStorage.token, $currentChatPage));
+		currentChatPage.set(1);
 
-			window.history.replaceState(history.state, '', `/c/${_chatId}`);
-		} else {
-			_chatId = 'local';
-			await chatId.set('local');
-		}
+		window.history.replaceState(history.state, '', `/c/${_chatId}`);
 		await tick();
 
 		return _chatId;
@@ -1901,17 +1895,15 @@
 
 	const saveChatHandler = async (_chatId, history) => {
 		if ($chatId == _chatId) {
-			if (!$temporaryChatEnabled) {
-				chat = await updateChatById(localStorage.token, _chatId, {
-					models: selectedModels,
-					history: history,
-					messages: createMessagesList(history, history.currentId),
-					params: params,
-					files: chatFiles
-				});
-				currentChatPage.set(1);
-				await chats.set(await getChatList(localStorage.token, $currentChatPage));
-			}
+			chat = await updateChatById(localStorage.token, _chatId, {
+				models: selectedModels,
+				history: history,
+				messages: createMessagesList(history, history.currentId),
+				params: params,
+				files: chatFiles
+			});
+			currentChatPage.set(1);
+			await chats.set(await getChatList(localStorage.token, $currentChatPage));
 		}
 	};
 </script>

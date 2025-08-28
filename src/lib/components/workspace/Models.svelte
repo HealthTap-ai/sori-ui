@@ -77,17 +77,10 @@
 		models = await getWorkspaceModels(localStorage.token);
 	};
 
-	const cloneModelHandler = async (model) => {
-		sessionStorage.model = JSON.stringify({
-			...model,
-			id: `${model.id}-clone`,
-			name: `${model.name} (Clone)`
-		});
-		goto('/workspace/models/create');
-	};
+
 
 	const shareModelHandler = async (model) => {
-		toast.success($i18n.t('Redirecting you to Open WebUI Community'));
+		toast.success($i18n.t('Redirecting you to SORi Health Community'));
 
 		const url = 'https://openwebui.com';
 
@@ -231,14 +224,7 @@
 				/>
 			</div>
 
-			<div>
-				<a
-					class=" px-2 py-2 rounded-xl hover:bg-gray-700/10 dark:hover:bg-gray-100/10 dark:text-gray-300 dark:hover:text-white transition font-medium text-sm flex items-center space-x-1"
-					href="/workspace/models/create"
-				>
-					<Plus className="size-3.5" />
-				</a>
-			</div>
+
 		</div>
 	</div>
 
@@ -349,9 +335,7 @@
 								shareHandler={() => {
 									shareModelHandler(model);
 								}}
-								cloneHandler={() => {
-									cloneModelHandler(model);
-								}}
+
 								exportHandler={() => {
 									exportModelHandler(model);
 								}}
@@ -508,7 +492,7 @@
 	{#if $config?.features.enable_community_sharing}
 		<div class=" my-16">
 			<div class=" text-xl font-medium mb-1 line-clamp-1">
-				{$i18n.t('Made by Open WebUI Community')}
+				{$i18n.t('Made by SORi Health Community')}
 			</div>
 
 			<a
